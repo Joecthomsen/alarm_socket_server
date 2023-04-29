@@ -33,22 +33,30 @@ public class SocketHandler implements Runnable{
                 this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 socketHandlers.add(this);
                 respondToNodeRequest("Connected to server - OK");
-                JSONObject jsonObject = new JSONObject(bufferedReader.readLine());
-                request = jsonObject.get("request").toString();
-                if (request.equals("register")) {
-                    deviceType = jsonObject.get("type").toString();
-                    if (Objects.equals(deviceType, "node")) {
-                        String deviceId = jsonObject.getString("deviceId");
-                        String owner = jsonObject.getString("owner");
-                        String nicName = jsonObject.getString("nicName");
-                        String startTime = jsonObject.getString("startTime");
-                        String endTime = jsonObject.getString("endTime");
-                        alarmNode = new AlarmNode(deviceId, owner, nicName, startTime, endTime);
-                        respondToNodeRequest("Device node registered: OK");
-                    } else if (Objects.equals(deviceType, "app")) {
-                        appNode = new AppNode(jsonObject.getString("userId"));
-                        respondToNodeRequest("App node registered: OK");
+                String registration = bufferedReader.readLine();
+                if(registration != null) {
+                    assert registration != null;
+                    JSONObject jsonObject = new JSONObject(registration);
+                    request = jsonObject.get("request").toString();
+                    if (request.equals("register")) {
+                        deviceType = jsonObject.get("type").toString();
+                        if (Objects.equals(deviceType, "node")) {
+                            String deviceId = jsonObject.getString("deviceId");
+                            String owner = jsonObject.getString("owner");
+                            String nicName = jsonObject.getString("nicName");
+                            String startTime = jsonObject.getString("startTime");
+                            String endTime = jsonObject.getString("endTime");
+                            alarmNode = new AlarmNode(deviceId, owner, nicName, startTime, endTime);
+                            respondToNodeRequest("Device node registered: OK");
+                        } else if (Objects.equals(deviceType, "app")) {
+                            appNode = new AppNode(jsonObject.getString("userId"));
+                            respondToNodeRequest("App node registered: OK");
+                        }
                     }
+                }
+                else {
+                    closeEverything(socket, bufferedReader, bufferedWriter);
+                    System.out.println("Connection closed before registered!");
                 }
             } catch (IOException e) {
                 respondToNodeRequest("Registered: Error");
