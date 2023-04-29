@@ -139,6 +139,9 @@ public class SocketHandler implements Runnable{
                         if(socketHandler.alarmNode != null){
                             if(Objects.equals(socketHandler.alarmNode.getDeviceId(), deviceToAdd) && Objects.equals(socketHandler.alarmNode.getOwner(), this.appNode.getId())){
                                 this.appNode.addAlarm(socketHandler.alarmNode);
+                                socketHandler.bufferedWriter.write("OK");
+                                socketHandler.bufferedWriter.newLine();
+                                socketHandler.bufferedWriter.flush();
                                 System.out.println("Alarm added: " + this.appNode.getAlarms());
                             }
                         }
@@ -152,10 +155,8 @@ public class SocketHandler implements Runnable{
                     for (SocketHandler socketHandler : socketHandlers){
                         if(socketHandler.alarmNode != null){
                             if(Objects.equals(socketHandler.alarmNode.getDeviceId(), deviceIdToEdit)){
-
                                 socketHandler.alarmNode.setStartTime(startTime);
                                 socketHandler.alarmNode.setEndTime(endTime);
-
                                 JSONObject messageToDevice = new JSONObject();
                                 messageToDevice.put("request", "setPeriod").put("startTime", startTime).put("endTime", endTime);
                                 socketHandler.bufferedWriter.write(messageToDevice.toString());

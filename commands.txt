@@ -1,0 +1,18 @@
+//Register device node
+{"request":"register","type":"node","deviceId":"1","owner":"4321","nicName":"stuen","startTime":"2000","endTime":"0700"}
+
+//Register app
+{"request":"register","type":"app","userId":"4321"}
+
+//Add device to app
+{"request":"addDevice","deviceId":"1"}
+
+
+//Get date
+{"request":"getDate"}
+
+//Send alarm
+{"request":"alarm","owner":"4321"}
+
+//Edit alarm period
+{"request":"setPeriod","deviceId":"1","startTime":"1234","endTime":"5678"}
