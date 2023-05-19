@@ -3,6 +3,7 @@ package org.example;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 public class Server {
 
@@ -13,10 +14,11 @@ public class Server {
     }
 
     public void startServer() throws IOException {
+        System.out.println(new Date() + " The socket server is started on port 9090");
         try{
             while (!serverSocket.isClosed()){
                 Socket socket = serverSocket.accept();
-                System.out.println("A client has connected!");
+                System.out.println(new Date() + " A client has connected!");
                 SocketHandler socketHandler = new SocketHandler(socket);
                 Thread thread = new Thread(socketHandler);
                 thread.start();
